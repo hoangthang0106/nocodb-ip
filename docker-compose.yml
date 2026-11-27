@@ -1,0 +1,30 @@
+# IT-MANAGER | NocoDB | Portainer Git Stack | 18898:18898
+# Port 18898 is next after Home Assistant 18897.
+# WARNING: social-analyzer Git compose ALSO references 18898; it is NOT proof of a running binding.
+# Verify TCP 18898 is free on host 192.168.20.194 before deploy; do not deploy two apps on the same host port.
+# Reuse existing Docker system "bridge"; no new subnet/route.
+services:
+  nocodb-ip:
+    image: nocodb/nocodb:latest
+    container_name: nocodb-ip
+    restart: unless-stopped
+    network_mode: bridge
+    ports:
+      - "18898:18898/tcp"
+    environment:
+      PORT: "18898"
+      NC_SITE_URL: "http://192.168.20.194:18898"
+      TZ: "Asia/Ho_Chi_Minh"
+    volumes:
+      - nocodb_ip_data:/usr/app/data
+    security_opt:
+      - no-new-privileges:true
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+volumes:
+  nocodb_ip_data:
+    name: nocodb_ip_data
