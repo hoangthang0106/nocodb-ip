@@ -1,0 +1,30 @@
+# IT-MANAGER | NocoDB | Portainer Git Stack | 18899:18899
+# 18898 is allocated in the social-analyzer Git Compose; avoid assigning it twice.
+# Host LAN 192.168.20.194; existing system Docker bridge, no extra subnet/route.
+# This minimal deployment uses local SQLite metadata with a persistent Docker volume.
+# Official upstream image; this deploy branch does NOT build the NocoDB fork source.
+services:
+  nocodb-ip:
+    image: nocodb/nocodb:latest
+    container_name: nocodb-ip
+    restart: unless-stopped
+    network_mode: bridge
+    ports:
+      - "18899:18899/tcp"
+    environment:
+      PORT: "18899"
+      NC_SITE_URL: "http://192.168.20.194:18899"
+      TZ: "Asia/Ho_Chi_Minh"
+    volumes:
+      - nocodb_ip_data:/usr/app/data
+    security_opt:
+      - no-new-privileges:true
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+volumes:
+  nocodb_ip_data:
+    name: nocodb_ip_data
